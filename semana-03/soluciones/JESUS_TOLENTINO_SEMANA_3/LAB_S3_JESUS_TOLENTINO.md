@@ -6,7 +6,7 @@
 | **Curso** | Programación Segura (DD281) — Semana 3 |
 | **Nombre del estudiante** | JESUS ANTONIO TOLENTINO VARGAS |
 | **Código** | 2221896125 |
-| **Fecha de entrega** | 20/06/2026 |
+| **Fecha de entrega** | _____________ |
 | **Tiempo estimado** | 2 horas |
 | **Modalidad** | Individual o en pareja |
 
@@ -227,15 +227,23 @@ Navega a `http://localhost:5000` → haz login → abre DevTools (F12) → Appli
 
 **P1.1:** ¿Qué valor tiene la cookie `session` que aparece en DevTools? ¿Es el email del usuario directamente?
 
-*Tu respuesta:* ___________________________________________________
+*Tu respuesta:* 
+
+La cookie session que aparece en DevTools contiene un valor firmado generado por Flask. No es directamente el correo del usuario en texto plano, sino una representación protegida de los datos de sesión. Flask usa la SECRET_KEY para firmar esa cookie y evitar que el usuario pueda modificarla válidamente.
+
 
 **P1.2:** ¿Qué pasa si cambias el atributo `SESSION_COOKIE_HTTPONLY` a `False`? Observa qué cambia en DevTools.
 
-*Tu respuesta:* ___________________________________________________
+*Tu respuesta:* 
+
+Si cambio SESSION_COOKIE_HTTPONLY a False, la cookie deja de estar protegida contra acceso desde JavaScript. En DevTools ya no aparece marcada como HttpOnly. Esto es inseguro porque, si existiera una vulnerabilidad XSS, un atacante podría intentar leer la cookie desde el navegador.
+
 
 **P1.3:** Abre la consola de DevTools y ejecuta `document.cookie`. ¿Qué muestra? ¿Por qué?
 
-*Tu respuesta:* ___________________________________________________
+*Tu respuesta:* 
+
+Al ejecutar document.cookie, si HttpOnly está en True, la cookie de sesión no debería mostrarse. Esto ocurre porque el atributo HttpOnly impide que JavaScript acceda al valor de la cookie. Si se cambia a False, entonces la cookie podría aparecer en consola, aumentando el riesgo de robo de sesión.
 
 ---
 
@@ -360,12 +368,15 @@ Realiza las siguientes pruebas y registra los resultados:
 
 **Pregunta 2.1:** ¿Qué pasaría si en la ruta `/admin/panel` verificaras el rol con `request.args.get('role') == 'admin'` en lugar del decorador? ¿Cómo lo explotaría un atacante?
 
-*Tu respuesta:* ___________________________________________________
-___________________________________________________
+*Tu respuesta:* 
+
+Si se verificara el rol usando request.args.get('role') == 'admin', el sistema estaría confiando en un dato enviado por el cliente. Un atacante podría modificar la URL y agregar ?role=admin para intentar acceder al panel administrativo. Esto sería una vulnerabilidad de control de acceso, porque el rol debe validarse desde la sesión del servidor y no desde parámetros manipulables por el usuario.
 
 **Pregunta 2.2:** Después de hacer login como `usuario@test.com` e intentar `/admin/panel`, revisa la consola del navegador. ¿El error 403 revela información del servidor que no debería mostrarse?
 
-*Tu respuesta:* ___________________________________________________
+*Tu respuesta:* 
+
+El error 403 solo muestra que el acceso fue denegado, pero no debería revelar detalles internos del servidor, rutas físicas, código fuente ni información técnica sensible. Esto es correcto porque el usuario solo recibe un mensaje controlado. Si el sistema mostrara trazas de error, nombres de archivos o detalles de configuración, sería una mala práctica de seguridad.
 
 ---
 
@@ -407,7 +418,9 @@ def demo_fixation():
 
 Navega a `/demo/fixation` antes y después del login. ¿Cambia el session_id?
 
-*Tu observación:* ___________________________________________________
+*Tu observación:* 
+
+Antes de iniciar sesión, la ruta /demo/fixation muestra que no existe una sesión autenticada o que la sesión previa no contiene user_id. Después del login, el valor de la cookie de sesión cambia porque se ejecuta session.clear() antes de asignar los datos del usuario. Esto demuestra que el sistema previene Session Fixation, ya que no reutiliza una sesión previa controlada por un atacante.
 
 ---
 
@@ -437,11 +450,7 @@ sesiones_auditoria = {}  # {session_id_hash: {usuario, ip, login_at, last_seen}}
 
 *Tu respuesta (mínimo 5 líneas):*
 
-_____________________________________________________
-_____________________________________________________
-_____________________________________________________
-_____________________________________________________
-_____________________________________________________
+El concepto más difícil de implementar fue el control de acceso por roles usando RBAC, porque no basta con saber si el usuario inició sesión, también se debe verificar qué permisos tiene según su rol. Además, entendí que nunca se debe confiar en datos enviados desde el cliente, como parámetros de la URL o valores ocultos en formularios. El concepto que tendrá mayor impacto en la seguridad de mi proyecto será la gestión segura de sesiones, especialmente el uso de HttpOnly, SameSite, session.clear() y logout correcto. Estas medidas reducen riesgos como robo de sesión, Session Fixation y accesos no autorizados. En un sistema real, aplicar estas prácticas ayuda a proteger información sensible y a evitar que un usuario acceda a funciones que no le corresponden.
 
 ---
 
